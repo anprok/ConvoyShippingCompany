@@ -1,0 +1,48 @@
+<h2>Robot</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Suppose we have the following class hierarchy:</p> 
+  <pre><code class="language-python">class Robot:
+    def greet(self):
+        print("I am a robot")
+
+
+class Android(Robot):
+    def greet(self):
+        super().greet()
+        print("I am an android")
+
+
+class PersonalAssistant(Robot):
+    def greet(self):
+        super().greet()
+        print("I am a personal assistant")
+
+
+class AssistantAndroid(Android, PersonalAssistant):
+    def greet(self):
+        super().greet()</code></pre> 
+  <p>We've created an instance of the class <code class="language-python">AssistantAndroid</code> and called the <code class="language-python">greet</code> method. What will be the output? </p> 
+  <p>NOTE: pay attention to the order of the <code class="language-python">super()</code> calls and <code class="language-python">print()</code>.</p> 
+  <p>The options are the following:</p> 
+  <p>a)</p> 
+  <pre><code class="language-python"># I am a robot
+# I am a personal assistant
+# I am an android</code></pre> 
+  <p>b)</p> 
+  <pre><code class="language-python"># I am a robot
+# I am an android
+# I am a personal assistant</code></pre> 
+  <p>c)</p> 
+  <pre><code class="language-python"># I am an android</code></pre> 
+  <p>d)</p> 
+  <pre><code class="language-python"># I am a personal assistant
+# I am a robot
+# I am an android</code></pre> 
+  <p>e)</p> 
+  <pre><code class="language-python"># I am an android
+# I am a personal assistant
+# I am a robot</code></pre>
+ </body>
+</html>

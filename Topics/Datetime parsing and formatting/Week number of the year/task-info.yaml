@@ -1,0 +1,17 @@
+type: code
+files:
+- name: main.py
+  visible: true
+  text: |-
+    from datetime import datetime
+
+
+    def get_week_number(datetime_obj):
+        ...
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/15247#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Sat, 13 Aug 2022 20:33:07 UTC
+record: -1

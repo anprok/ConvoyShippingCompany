@@ -1,0 +1,13 @@
+type: code
+custom_name: How to open all .txt files?
+files:
+- name: main.py
+  visible: true
+  text: import glob
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/15071#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: Sat, 13 Aug 2022 13:57:53 UTC
+record: -1

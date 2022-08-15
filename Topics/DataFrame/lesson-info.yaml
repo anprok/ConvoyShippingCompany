@@ -1,0 +1,6 @@
+content:
+- Theory
+- Accessing multiple columns of a DataFrame
+- Writing DataFrame to a file
+- Last 10 rows
+- Printing out dimensions of a DataFrame

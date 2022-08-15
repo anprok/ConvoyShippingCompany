@@ -1,0 +1,30 @@
+<h2>Alerts</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Below you can see a class hierarchy:</p> 
+  <pre><code class="language-python">class Alert:
+    def __init__(self, id):
+        self.id = id
+
+    def get_message(self):
+        print("Alert {}".format(self.id))
+
+
+class Warning(Alert):
+    def get_message(self):
+        print("Warning {}".format(self.id))
+
+
+class Error(Alert):
+    def get_message(self):
+        print("Error {}".format(self.id))
+
+
+class WarningError(Error, Warning):
+    pass</code></pre> 
+  <p>Suppose, we create an instance of the class <code class="language-python">WarningError</code> and call the <code class="language-python">get_message</code> method. What will be the output?</p> 
+  <pre><code class="language-python">warn_error8 = WarningError(8)
+warn_error8.get_message()</code></pre>
+ </body>
+</html>

@@ -1,0 +1,101 @@
+<h2>Shelve</h2>
+<html>
+ <head></head>
+ <body>
+  <p>Imagine you have a big and beautiful library with all kinds of books. But it is a Schrödinger kind of library, once you leave the room, it disappears. You can't give a book to a friend or enjoy reading it in another room. This metaphor explains what happens to most Python objects — they are accessible only when the program is running, and afterwards, they just cease to exist and, if needed, have to be created again. </p> 
+  <p>One of the basic and convenient data types for storing various kinds of objects in Python are dictionaries. A dictionary object shares the same destiny with many other objects in Python — it's not available after a program has been executed. But we have a workaround called <code class="language-python">shelve</code>. </p> 
+  <p><code class="language-python">shelve</code> is a Python module that lets you create persistent dictionaries that are pretty similar to databases by their nature. They can be stored locally on your machine, and used later with the same structure and functionality. The only limitation is that only strings can be keys, but as values, you can store any Python objects. Cool, isn't it? Let's dig deeper and create a library that will be available anywhere, anytime.</p> 
+  <h5 id="opening">Opening</h5> 
+  <p>To start with, we need to import the module.</p> 
+  <pre><code class="language-python">import shelve</code></pre> 
+  <p>Now, we can create a new persistent dictionary or open the existing one using the <code class="language-python">open()</code> function:</p> 
+  <pre><code class="language-python">lib = shelve.open("my_library", flag="c", writeback=False)</code></pre> 
+  <p>An instance like this is called a <strong>shelf</strong>. Different platforms may give different results. Windows would generate three files: "<samp>my_library.dir"</samp>, "<samp>my_library.dat"</samp>, "<samp>my_library.bak"</samp>; on Linux there will only be "<samp>my_library"</samp>, macOS would have only "<samp>my_library.db"</samp>. This is due to the specifics of the operating systems, so don't think of this too much right now; you should just be able to recognize these files in the folder.</p> 
+  <p>You may notice that some parameters are passed to the function when creating the object in the example above. Let's go through them one by one.</p> 
+  <p>The first one is the string containing a filename. Note that you shouldn't add any extension to the filename. The second one, called a flag, specifies the opening mode. There are four values you can pass to the flag parameter:</p> 
+  <table align="center" border="1" cellpadding="1" cellspacing="1" style="width: 700px;"> 
+   <thead> 
+    <tr> 
+     <th>Value</th> 
+     <th>Meaning</th> 
+    </tr> 
+   </thead> 
+   <tbody> 
+    <tr> 
+     <td>"r"</td> 
+     <td>opens an existing file for reading</td> 
+    </tr> 
+    <tr> 
+     <td>"w"</td> 
+     <td>opens an existing file for reading and writing</td> 
+    </tr> 
+    <tr> 
+     <td>"c"</td> 
+     <td>opens an existing file for reading and writing, creating it if it doesn't exist</td> 
+    </tr> 
+    <tr> 
+     <td>"n"</td> 
+     <td>creates a new empty file, opens it for reading and writing</td> 
+    </tr> 
+   </tbody> 
+  </table> 
+  <p>The function creates a shelf file by default, it is also automatically opened for reading and writing, so, in our case, we do not need to specify the "c" flag value.</p> 
+  <p>There is also a "writeback" parameter which, if <code class="language-python">True</code>, is responsible for storing all values in memory and for writing them back when the file is closed. We'll discuss this parameter in detail later.</p> 
+  <h5 id="what-can-you-do-with-a-persistent-dictionary">What can you do with a persistent dictionary?</h5> 
+  <p>As an answer to this question — everything you may want to do with a "usual" dictionary. Let's, for example, add some books to our library:</p> 
+  <pre><code class="language-python">lib["A Song of Ice and Fire"] = ["A Game of Thrones", "A Clash of Kings", "A Storm of Swords", "A Feast for Crows", "A Dance with Dragons", "The Winds of Winter", "A Dream of Spring"]
+lib["The Hunger Games"] = ["The Hunger Games", "Catching Fire", "Mockingjay"]
+lib["The Girl with the Dragon Tattoo"] = ["The Girl with the Dragon Tattoo", "The Girl Who Played with Fire", "The Girl Who Kicked the Hornet's Nest"]</code></pre> 
+  <p>Now, imagine that last week your friend had a birthday and you gave them "The Girl with the Dragon Tattoo" as a present. It's not in the library anymore, so let's delete it and compare the lengths before and after to check if the job was done:</p> 
+  <pre><code class="language-python">print(len(lib))  # 3
+del lib["The Girl with the Dragon Tattoo"]
+print(len(lib))  # 2</code></pre> 
+  <p>As an alternative, you can also do the following:</p> 
+  <pre><code class="language-python">print("The Girl with the Dragon Tattoo" in lib)  # False</code></pre> 
+  <p>In case you want to print your persistent dictionary to see the contents, keep in mind this kind of dictionary is different so you can't achieve it by printing:</p> 
+  <pre><code class="language-python">print(lib)  # this will print: 
+#  &lt;shelve.DbfilenameShelf object at 0x000001FF6AD48308&gt;</code></pre> 
+  <p>What you see here is actually a memory address, where the object is stored. There are many ways to get what you want depending on your particular needs. You can, for example, go through the persistent dictionary and print it key by key and value by value:</p> 
+  <pre><code class="language-python">for key in lib:
+    print(key + ": ", lib[key])
+
+# A Song of Ice and Fire: ['A Game of Thrones', 'A Clash of Kings', 'A Storm of Swords', 'A Feast 
+# for Crows', 'A Dance with Dragons', 'The Winds of Winter', 'A Dream of Spring']
+# The Hunger Games: ['The Hunger Games', 'Catching Fire', 'Mockingjay']</code></pre> 
+  <p>Don't forget that iterating through a large amount of data might take a lot of time.</p> 
+  <p>Speaking of time, let's look closer at the "writeback" parameter.</p> 
+  <h5 id="writeback-and-sync">Writeback and sync()</h5> 
+  <p>We added "A Song of Ice and Fire" book series key as values, but the last two books aren't out yet, so you can't have them in your library. In order to correct that, you would normally do something like this:</p> 
+  <pre><code class="language-python">del lib["A Song of Ice and Fire"][6]
+del lib["A Song of Ice and Fire"][5]</code></pre> 
+  <p>But, if you check the length of the list stored as values, you are going to get:</p> 
+  <pre><code class="language-python">len(lib["A Song of Ice and Fire"])  # 7</code></pre> 
+  <p>Why so? The thing is, every time you'd like to get a value from the shelf, Python returns a copy of that value. So, in the example above, you actually modify a copy but not the value itself. As for our shelf, this happens because the "writeback" parameter was set to <code class="language-python">False</code> (which is by default), so the accessed values won't be written back and, to modify a value, you will have to reassign it to the shelf explicitly:</p> 
+  <pre><code class="language-python">temp = lib["A Song of Ice and Fire"]  # a copy is made
+temp.pop(6)  # modify the copy
+temp.pop(5)
+lib["A Song of Ice and Fire"] = temp  # assign a new value to the key
+print(len(lib["A Song of Ice and Fire"]))  # check the result
+# 5</code></pre> 
+  <p>It's worth noticing that it is not a problem for immutable objects (like strings and integers, for example). If we stored just the number of books as values instead of their names, a new book could be added like this:</p> 
+  <pre><code class="language-python">lib["The Godfather"] = 4
+lib["The Godfather"] += 1
+print(lib["The Godfather"])  # 5</code></pre> 
+  <p>This is because Python cannot modify an immutable object, so it recounts and reassigns a new value itself.</p> 
+  <p>Now let's see how the same can be achieved with the "writeback" parameter set to <code class="language-python">True</code>:</p> 
+  <pre><code class="language-python">lib = shelve.open("my_library", flag="c", writeback=True)
+print(len(lib["A Song of Ice and Fire"]))  # 7
+del lib["A Song of Ice and Fire"][6]
+del lib["A Song of Ice and Fire"][5]
+print(len(lib["A Song of Ice and Fire"]))  # 5</code></pre> 
+  <p>The difference is pretty clear. Although, it may seem that using the <code class="language-python">writeback=True</code> is more logical and easier, note that to be able to modify an object in the shelf, Python needs to store all the items of the program in memory. When closing the shelf, if <code class="language-python">writeback</code> is <code class="language-python">True</code>, all the accessed data is written back to the shelf. If the shelf is large, this procedure may significantly lower the program performance.</p> 
+  <p>If <code class="language-python">writeback</code> is <code class="language-python">True</code>, you may explicitly write back to the shelf all the modified entries and locally synchronize the persistent dictionary whenever you like. To do so, call <code class="language-python">lib.sync()</code>: it will update the values in the shelf. When closing the file, <code class="language-python">sync()</code> is called automatically. Don't forget, however, that if <code class="language-python">writeback</code> was <code class="language-python">False</code>, you wouldn't be able to call <code class="language-python">sync()</code> at all.</p> 
+  <h5 id="closing">Closing</h5> 
+  <p>The official Python Shelve <a target="_blank" href="https://docs.python.org/3/library/shelve.html" rel="noopener noreferrer nofollow">Documentation</a> recommends closing the shelf explicitly with the <code class="language-python">close()</code> method, <code class="language-python">lib.close()</code> instead of relying on the automatic closing feature. Do that either at the very end of the program code or when you're sure that you won't need it anymore, since you will get <strong><em>ValueError </em></strong>if you try to operate with the closed shelf.</p> 
+  <p>If you don't want to worry about closing the shelf, you may use the context manager. It'll do the closing automatically after you're done:</p> 
+  <pre><code class="language-python">with shelve.open("my_library") as lib:
+    # do all the stuff here</code></pre> 
+  <h5 id="summary">Summary</h5> 
+  <p>In this topic, we learned about the Python <code class="language-python">shelve</code> module and how we can use it. The main <code class="language-python">shelve</code> methods are <code class="language-python">open()</code>, <code class="language-python">sync()</code> and <code class="language-python">close()</code>, however, shelf objects support all dictionary methods and also allow you to store your data as a file on disk persistently. If you're interested in a more detailed explanation, feel free to check the official Python <a target="_blank" href="https://docs.python.org/3/library/shelve.html" rel="noopener noreferrer nofollow">documentation</a>.</p>
+ </body>
+</html>

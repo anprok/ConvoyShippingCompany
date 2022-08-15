@@ -1,0 +1,104 @@
+<h2>Glob module</h2>
+<html>
+ <head></head>
+ <body>
+  <p>In this topic, we would like to introduce the <code class="language-python">glob</code> module. It can find files and directories on your computer whose names match a specific pattern. It is a simple yet steady module if you spend a lot of time working with files. </p> 
+  <p>This topic covers two <code class="language-python">glob</code> methods — one searches for files; the other creates searching patterns. Once you master this topic, you will be fully equipped to use the <code class="language-python">glob</code> module! One more thing. This module is a part of the Python Standard Library, so you don't need to install it from an external source.</p> 
+  <h5 id="patterns">Patterns</h5> 
+  <p>The <code class="language-python">glob</code> module lets you use wildcards to search for files and directories whose names follow particular patterns. The rules for these patterns are the ones used by Unix Shell. They resemble regular expressions but much simpler:</p> 
+  <table align="center" border="1" cellpadding="1" cellspacing="1" style="width: 600px;"> 
+   <tbody> 
+    <tr> 
+     <td><strong>Wildcard</strong></td> 
+     <td><strong>Meaning</strong></td> 
+    </tr> 
+    <tr> 
+     <td><code class="language-python">*</code></td> 
+     <td>matches 0 or more characters</td> 
+    </tr> 
+    <tr> 
+     <td><code class="language-python">?</code></td> 
+     <td>matches a single character</td> 
+    </tr> 
+    <tr> 
+     <td><code class="language-python">[0-9]</code></td> 
+     <td>specifies a range of alphanumeric characters (from <code class="language-python">0</code> to <code class="language-python">9</code> in this case)</td> 
+    </tr> 
+    <tr> 
+     <td><code class="language-python">[abc]</code></td> 
+     <td>matches only one character from the sequence (either <code class="language-python">a</code>, <code class="language-python">b</code>, or <code class="language-python">c</code> in this example)</td> 
+    </tr> 
+    <tr> 
+     <td><code class="language-python">[!abc]</code></td> 
+     <td>matches any character that is not in the sequence (any character that is not <code class="language-python">a</code>, <code class="language-python">b</code> or <code class="language-python">c</code>)</td> 
+    </tr> 
+   </tbody> 
+  </table> 
+  <p>All other characters are literals that match themselves. Don't worry if you are a bit lost right now. We will show examples in the following sections.</p> 
+  <h5 id="searching-for-one-file">Searching for one file</h5> 
+  <p>As we have already mentioned, the <code class="language-python">glob</code> module is quite straightforward. It has only three methods: <code class="language-python">glob</code>, <code class="language-python">iglob</code>, and <code class="language-python">escape</code>. We start with the first one, as it is most wanted. Before we begin, don't forget to import the glob module to your program.</p> 
+  <p>The syntax of the <code class="language-python">glob()</code> method is <code class="language-python">glob.glob(pathname, *, recursive=False)</code>.</p> 
+  <p>It returns a list of filenames that match the <code class="language-python">pathname</code> (a pattern where you can use wildcards). The <code class="language-python">recursive</code> flag is <code class="language-python">False</code> by default; it means that the search will be performed only in the provided directory. If you set it to <code class="language-python">True</code>, the pattern <code class="language-python">**</code> will match any files and subdirectories not only in the provided directory but also inside all subdirectories. </p> 
+  <p>The <code class="language-python">*</code> in between the <code class="language-python">pathname</code> and the <code class="language-python">recursive</code> flag passes this flag as a keyword argument. In other words, you can write <code class="language-python">glob('my_dir\\**', recursive=True)</code> instead of <code class="language-python">glob('my_dir\\**', True)</code>.</p> 
+  <p>The pathname can be either a path to an existing file on your computer (an absolute or relative) or a pattern.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   As you remember, an absolute path starts from the root of the file system like 
+   <code class="language-python">C:\\Users\\User\\my_dir\\image.gif</code>. Relative paths start from the current directory. For example, if your current directory is 
+   <code class="language-python">User</code>, it will be 
+   <code class="language-python">my_dir\\image.gif</code>.
+  </div>
+  <p></p> 
+  <p>Both ways can help you with finding a file on your machine.</p> 
+  <h5 id="searching-for-multiple-files">Searching for multiple files</h5> 
+  <p>Routinely, you may want to find multiple files that match a certain pattern. Let's look at some examples. For instance, you want to find all <code class="language-python">jpg</code> files in a directory. First, you need to write a pattern. It would look like this: <code class="language-python">my_dir\\*.jpg</code>. Remember that <code class="language-python">*</code> matches any number of any characters. After this, you insert it into the <code class="language-python">glob.glob()</code> method, and that's it:</p> 
+  <pre><code class="language-python">glob.glob('my_dir\\*.jpg')  # returns: ['my_dir\\1.jpg', 'my_dir\\image.JPG']</code></pre> 
+  <p>Now, let's try to find all files the names of which contain only one character. We don't know possible extensions of these files. That's how we can do the trick:</p> 
+  <pre><code class="language-python">glob.glob('my_dir\\?.*')   # returns: ['my_dir\\1.jpg', 'my_dir\\a.txt']</code></pre> 
+  <p><code class="language-python">?</code> matches one character; <code class="language-python">.</code> matches a dot; <code class="language-python">*</code> stands for any number of symbols. Since it comes after the dot, it also indicates the extension of our files.</p> 
+  <p>What do we do if we need all filenames in one directory? There's a simple solution – use the asterisk!</p> 
+  <pre><code class="language-python">glob.glob('my_dir\\*')</code></pre> 
+  <p>It returns a list of all files and subdirectories in the <code class="language-python">my_dir</code> directory. </p> 
+  <p></p>
+  <div class="alert alert-primary">
+   If no files or directories are matching your search, it will return an empty list.
+  </div>
+  <p></p> 
+  <h5 id="iterable-glob">Iterable glob</h5> 
+  <p><code class="language-python">glob.iglob()</code> returns an iterator that yields the same values as <code class="language-python">glob()</code>; the only difference is that it doesn't store them. As with any iterator, it can come in handy if you have a limited amount of memory. Here's what the call looks like — <code class="language-python">glob.iglob(pathname, *, recursive=False)</code></p> 
+  <p>The <code class="language-python">pathname</code> is written in the same way as in the <code class="language-python">glob()</code> method, and the <code class="language-python">recursive</code> flag also works the same.<br> Let's say we want to find all files with a three characters name where the first two characters are any digits. The third one is any character except <code class="language-python">0</code>. To do it, we need square brackets and an exclamation mark:</p> 
+  <pre><code class="language-python">generator = glob.iglob('my_dir\\[0-9][0-9][!0].*')
+
+for item in generator:
+    print(item)</code></pre> 
+  <p><code class="language-python">[0-9]</code> represents a range. It is any number from <code class="language-python">0</code> to <code class="language-python">9</code>. <code class="language-python">[!0]</code> means any character which is not 0; <code class="language-python">.</code> is literally a dot; <code class="language-python">*</code> is any number of characters after a dot, in other words — the extension.</p> 
+  <p></p>
+  <div class="alert alert-primary">
+   Don't forget that ranges can include letters, too. For example, 
+   <code class="language-python">[p-s]</code> means any letter from the 
+   <code class="language-python">p</code>-
+   <code class="language-python">q</code>-
+   <code class="language-python">r</code>-
+   <code class="language-python">s</code> range. 
+  </div>
+  <p></p> 
+  <p>This search can return the following files: <code class="language-python">12a.txt</code>, <code class="language-python">345.jpg</code>, <code class="language-python">00j.csv</code> but not <code class="language-python">120.txt</code>.</p> 
+  <h5 id="escaping">Escaping</h5> 
+  <p>The last method <code class="language-python">glob.escape()</code> can escape special characters: <code class="language-python">*</code>, <code class="language-python">?</code>, and <code class="language-python">[]</code>. In other words, <code class="language-python">*</code> would no longer mean "any character"; it would mean only an asterisk. A question mark would be a literal question mark. The brackets will be mere brackets. It may be useful if these characters are in the filename you would like to find.</p> 
+  <p>The syntax is even simpler than in the previous methods: <code class="language-python">glob.escape(pathname)</code>. Note that there is no recursive flag. This is explained by the fact that <code class="language-python">glob.escape()</code> doesn't search for anything. It returns a string — a pathname with escaped characters that you can then pass to <code class="language-python">glob.glob()</code>.</p> 
+  <p>Let's say we need to find a subdirectory with the <code class="language-python">[dir]</code> name. <code class="language-python">glob.glob('my_dir\\[dir]')</code> will not work in this case. Remember that <code class="language-python">[]</code> is a special symbol, and, in this case, your query will return a subdirectory called <code class="language-python">d</code>, <code class="language-python">i</code>, or <code class="language-python">r</code>, if there's one. So, how do we find our <code class="language-python">[dir]</code>? That's where we use the <code class="language-python">escape</code> method:</p> 
+  <pre><code class="language-python">glob.escape('my_dir\\[dir]')  # returns: 'my_dir\\[[]dir]'
+# now we pass the result to the glob() method:
+glob.glob('my_dir\\[[]dir]')  # returns: ['my_dir\\[dir]']</code></pre> 
+  <p>First, we get a string with the escaped characters we needed for the search. Then we perform the actual search and get a list with results. The escaped string <code class="language-python">[[]dir]</code> contains <code class="language-python">[]</code> to select the left bracket <code class="language-python">[</code>; it is no more identified as a special symbol. Then we write the rest of the string as-is — <code class="language-python">dir]</code>. The right bracket is a special symbol only when it follows the left bracket.</p> 
+  <h5 id="conclusion">Conclusion</h5> 
+  <p>In this topic, we have learned:</p> 
+  <ul> 
+   <li>to write patterns for file searching with the help of special characters — <code class="language-python">*</code>, <code class="language-python">?</code>, <code class="language-python">[ - ]</code>, <code class="language-python">[]</code>, <code class="language-python">[!]</code>;</li> 
+   <li>to search for files and directories using the patterns and the <code class="language-python">glob.glob()</code> method;</li> 
+   <li>to create generators to yield filenames with <code class="language-python">glob.iglob()</code>;</li> 
+   <li>to escape special characters with <code class="language-python">glob.escape()</code>.</li> 
+  </ul> 
+  <p>Now let's move on to practice! </p>
+ </body>
+</html>

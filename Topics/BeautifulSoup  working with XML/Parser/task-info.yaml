@@ -1,0 +1,17 @@
+type: choice
+is_multiple_choice: false
+options:
+- text: <code>html.parser_xml</code>
+- text: <code>xml</code>
+- text: <code>xml.parser</code>
+- text: <code>lxml</code>
+files:
+- name: main.py
+  visible: true
+  text: |+
+    #  You can experiment here, it won’t be checked
+
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/13098#comment
+status: Solved
+record: -1
